@@ -1,6 +1,6 @@
 # github-actions.nvim
 
-Neovim plugin for GitHub actions.
+Neovim plugin for GitHub Actions.
 
 ## Installation
 
@@ -27,4 +27,4 @@ Default configuration (passed as `opts`)
 
 ## Features
 
-- custom Treesitter parser for GitHub actions syntax.
+- custom Treesitter parser for GitHub Actions syntax.
