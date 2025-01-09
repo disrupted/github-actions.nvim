@@ -14,7 +14,7 @@ example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
         'neovim/nvim-lspconfig',
         'williamboman/mason.nvim', -- optional
     },
-    ft = 'yaml.gha',
+    ft = 'yaml.github',
     opts = {},
 }
 ```

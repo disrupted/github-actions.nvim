@@ -7,7 +7,7 @@ if not configs['gh_actions_ls'] then
         'gh-actions-language-server',
         '--stdio',
       },
-      filetypes = { 'yaml.gha' },
+      filetypes = { 'yaml.github' },
       single_file_support = true,
       root_dir = function(fname)
         return vim.uv.cwd()
