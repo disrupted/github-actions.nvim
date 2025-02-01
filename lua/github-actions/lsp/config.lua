@@ -1,4 +1,9 @@
-local configs = require('lspconfig.configs')
+-- The user may not have nvim-lspconfig for Neovim 0.11+ with native lsp/* support.
+local ok, configs = pcall(require, 'lspconfig.configs')
+
+if not ok then
+  return
+end
 
 if not configs['gh_actions_ls'] then
   configs['gh_actions_ls'] = {
@@ -9,7 +14,7 @@ if not configs['gh_actions_ls'] then
       },
       filetypes = { 'yaml.github' },
       single_file_support = true,
-      root_dir = function(fname)
+      root_dir = function()
         return vim.uv.cwd()
       end,
       handlers = {
