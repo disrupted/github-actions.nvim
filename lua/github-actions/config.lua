@@ -48,7 +48,7 @@ local defaults = {
 ---@param token string
 local function validate_token(token)
   if not vim.startswith(token, 'ghp_') or #token ~= 40 then
-    utils.error(string.format('GitHub token provider failed to return valid token string'))
+    utils.error('GitHub token provider failed to return valid token string')
     return
   end
 end
@@ -65,6 +65,7 @@ function M.setup(opts)
   M.config = vim.tbl_deep_extend('keep', defaults, opts or {})
 
   if M.config.token_provider then
+    utils.notify('Retrieving GitHub token...')
     local token = assert(M.config.token_provider())
     validate_token(token)
     M.config.lsp.init_options.sessionToken = token
