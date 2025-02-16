@@ -13,9 +13,11 @@ M.setup = function(opts)
     vim.lsp.enable('gh_actions_ls')
 
     -- since we're lazy-loading we have to start LSP client for current buffer
-    if vim.bo.filetype == 'yaml.github' then
-      vim.lsp.start(vim.lsp.config.gh_actions_ls)
-    end
+    vim.schedule(function()
+      if vim.bo.filetype == 'yaml.github' then
+        vim.lsp.start(vim.lsp.config.gh_actions_ls)
+      end
+    end)
   end)
 end
 
