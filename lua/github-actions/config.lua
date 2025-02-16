@@ -4,15 +4,31 @@ local system = require('coop.vim').system
 local M = {}
 
 ---@class github_actions.Config
----@field token_provider? async fun(): string?
+---@field token_provider async fun(): string
 ---@field lsp? github_actions.LspConfig
+
 ---@class github_actions.LspConfig: vim.lsp.Config
 ---@field init_options github_actions.LspConfig.InitOptions
+
 ---@class github_actions.LspConfig.InitOptions
 ---@field sessionToken? string
 
 ---@type github_actions.Config
 local defaults = {
+  token_provider = function()
+    if not vim.fn.executable('gh') == 1 then
+      error('Please install the gh CLI or configure a custom token provider.') -- TODO: vim.health
+    end
+    local result = require('coop.vim').system({ 'gh', 'auth', 'token' })
+    if result.code ~= 0 then
+      local msg = 'Error retrieving token from gh CLI'
+      if result.stderr then
+        msg = msg .. ': ' .. result.stderr
+      end
+      error(msg)
+    end
+    return assert(result.stdout)
+  end,
   lsp = {
     cmd = { 'gh-actions-language-server', '--stdio' },
     filetypes = { 'yaml.github' },
@@ -45,13 +61,13 @@ local defaults = {
   },
 }
 
----@param token string?
+---@param token string
 ---@return string token
 local function validate_token(token)
-  assert(token, 'GitHub token provider returned nil value')
+  vim.validate('token', token, 'string')
   token = vim.trim(token)
   if not vim.startswith(token, 'ghp_') or #token ~= 40 then
-    error('GitHub token provider failed to return valid token string')
+    utils.error('GitHub token provider failed to return valid token string')
   end
   return token
 end
@@ -68,7 +84,7 @@ function M.setup(opts)
   M.config = vim.tbl_deep_extend('keep', defaults, opts or {})
 
   if M.config.token_provider then
-    utils.notify('Retrieving GitHub token...')
+    utils.notify('Retrieving GitHub token...', vim.log.levels.DEBUG)
     local token = validate_token(M.config.token_provider())
     M.config.lsp.init_options.sessionToken = token
   end

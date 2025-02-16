@@ -2,6 +2,10 @@
 
 Neovim plugin for GitHub Actions.
 
+## Requirements
+
+- `gh` CLI installed and authenticated. (please check `gh auth status`)
+
 ## Installation
 
 example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
@@ -17,13 +21,7 @@ example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
     ft = 'yaml.github',
     ---@module 'github-actions.config'
     ---@type github_actions.Opts
-    opts = {
-        -- NOTE: some language server features require a GitHub Access Token. Implement this async function to retrieve it.
-        token_provider = function()
-            -- it is recommended to retrieve the token from a password manager
-            return 'ghp_........'
-        end,
-    },
+    opts = {},
 }
 ```
 
@@ -35,5 +33,5 @@ Default configuration (passed as `opts`)
 
 ## Features
 
+- configure LSP for GitHub Actions. Some language server features require a GitHub access token. The default token provider retrieves it from the `gh` CLI. You can override the token provider if you prefer to retrieve it from your password manager instead.
 - custom Treesitter parser for GitHub Actions syntax.
-- configure LSP for GitHub Actions.
