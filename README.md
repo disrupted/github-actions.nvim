@@ -15,7 +15,6 @@ example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
     'disrupted/github-actions.nvim',
     dependencies = {
         'nvim-treesitter/nvim-treesitter',
-        'gregorias/coop.nvim', -- used for async config with GitHub token provider
         'williamboman/mason.nvim', -- optional
     },
     ft = 'yaml.github',
