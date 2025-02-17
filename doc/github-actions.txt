@@ -42,7 +42,7 @@ example using Lazy <https://github.com/folke/lazy.nvim> plugin manager
 CONFIGURATION               *github-actions-github-actions.nvim-configuration*
 
 
-TOKEN PROVIDER
+TOKEN PROVIDER ~
 
 Some language server features require a GitHub access token.
 
