@@ -14,10 +14,7 @@ example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
 ```lua
 {
     'disrupted/github-actions.nvim',
-    dependencies = {
-        'nvim-treesitter/nvim-treesitter',
-        'williamboman/mason.nvim', -- optional
-    },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     ft = 'yaml.github',
     ---@module 'github-actions.config'
     ---@type github_actions.Opts
