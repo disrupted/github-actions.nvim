@@ -12,18 +12,21 @@ parser_config[lang_name] = {
   maintainers = { 'disrupted' },
   filetype = ft,
   install_info = {
-    url = '~/dev/tree-sitter-github-actions',
+    url = 'https://github.com/disrupted/tree-sitter-github-actions',
     files = { 'src/parser.c' },
+    branch = 'main',
   },
 }
 require('nvim-treesitter.install').ensure_installed_sync(lang_name)
 
+-- TODO
 -- lang_name = 'githubactionscondition'
 -- parser_config[lang_name] = {
 --   maintainers = { 'disrupted' },
 --   install_info = {
 --     url = '~/dev/tree-sitter-github-actions-condition',
 --     files = { 'src/parser.c' },
+--     branch = 'main',
 --   },
 -- }
 -- require('nvim-treesitter.install').ensure_installed_sync(lang_name)
@@ -33,8 +36,9 @@ parser_config[lang_name] = {
   maintainers = { 'disrupted' },
   filetype = lang_name,
   install_info = {
-    url = '~/dev/tree-sitter-github-bash',
+    url = 'https://github.com/disrupted/tree-sitter-github-bash',
     files = { 'src/parser.c', 'src/scanner.c' },
+    branch = 'main',
   },
 }
 require('nvim-treesitter.install').ensure_installed_sync(lang_name)
