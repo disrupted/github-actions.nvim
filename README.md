@@ -5,7 +5,6 @@ Neovim plugin for GitHub Actions.
 ## Features
 
 - configure LSP for GitHub Actions.
-- custom Treesitter parser for GitHub Actions syntax.
 
 ## Installation
 
@@ -14,7 +13,6 @@ example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
 ```lua
 {
     'disrupted/github-actions.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     ft = 'yaml.github',
     ---@module 'github-actions.config'
     ---@type github_actions.Opts
@@ -55,3 +53,7 @@ opts = {
   end,
 }
 ```
+
+## Notes
+
+to add Treesitter parser for GitHub Actions syntax take a look at [gh-actions.nvim](https://github.com/Hdoc1509/gh-actions.nvim)
