@@ -20,11 +20,10 @@ end
 
 ---@param config github_actions.lsp.Config
 M.config = function(config)
-  vim.lsp.config(server_name, config)
-  vim.lsp.enable(server_name)
-
   -- since we're lazy-loading we have to start LSP client for current buffer
   vim.schedule(function()
+    vim.lsp.config(server_name, config)
+    vim.lsp.enable(server_name)
     if vim.bo.filetype == 'yaml.github' then
       vim.lsp.start(vim.lsp.config[server_name])
     end
