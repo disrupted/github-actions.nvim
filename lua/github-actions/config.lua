@@ -9,6 +9,13 @@ local M = {}
 
 ---@class github_actions.lsp.Config.InitOptions
 ---@field sessionToken? string
+---@field repos? github_actions.lsp.Config.InitOptions.RepositoryContext[]
+
+---@class github_actions.lsp.Config.InitOptions.RepositoryContext
+---@field owner string
+---@field name string
+---@field organizationOwned boolean
+---@field workspaceUri lsp.URI
 
 ---@type github_actions.Config
 local defaults = {
@@ -26,6 +33,20 @@ local defaults = {
     },
     init_options = {},
     handlers = {
+      ['actions/readFile'] = function(_, result)
+        if type(result.path) ~= 'string' then
+          return nil, nil
+        end
+        local file_path = vim.uri_to_fname(result.path)
+        if vim.fn.filereadable(file_path) == 1 then
+          local f = assert(io.open(file_path, 'r'))
+          local text = f:read('*a')
+          f:close()
+
+          return text, nil
+        end
+        return nil, nil
+      end,
       ['textDocument/publishDiagnostics'] = function(err, result, ctx)
         result.diagnostics = vim.tbl_filter(function(diagnostic)
           -- silence annoying context warnings https://github.com/github/vscode-github-actions/issues/222

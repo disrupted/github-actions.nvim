@@ -11,6 +11,21 @@ M.setup = function(config)
     utils.notify('Retrieving GitHub token...', vim.log.levels.DEBUG)
     config.token_provider(function(token)
       config.lsp.init_options.sessionToken = token_provider.validate(token)
+      -- repos
+      token_provider.system(
+        { 'gh', 'repo', 'view', '--json', 'owner,name,isInOrganization' },
+        function(stdout)
+          local data = vim.json.decode(stdout)
+          config.lsp.init_options.repos = {
+            {
+              owner = data.owner.login --[[@as string]],
+              name = data.name --[[@as string]],
+              organizationOwned = data.isInOrganization --[[@as boolean]],
+              workspaceUri = vim.uri_from_fname(assert(vim.uv.cwd())),
+            },
+          }
+        end
+      )
       M.config(config.lsp)
     end)
   else
