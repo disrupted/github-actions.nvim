@@ -24,6 +24,7 @@ local defaults = {
     cmd = { 'gh-actions-language-server', '--stdio' },
     filetypes = { 'yaml.github' },
     root_markers = { '.github' },
+    workspace_required = true,
     capabilities = {
       workspace = {
         didChangeWorkspaceFolders = {
