@@ -21,7 +21,7 @@ local M = {}
 local defaults = {
   token_provider = require('github-actions.lsp.token_provider').gh,
   lsp = {
-    cmd = { 'gh-actions-language-server', '--stdio' },
+    cmd = { 'actions-languageserver', '--stdio' },
     filetypes = { 'yaml.github' },
     root_markers = { '.github' },
     workspace_required = true,
@@ -33,20 +33,39 @@ local defaults = {
       },
     },
     init_options = {},
+    ---@type table<vim.lsp.protocol.Methods, lsp.Handler>
     handlers = {
-      ['actions/readFile'] = function(_, result)
-        if type(result.path) ~= 'string' then
-          return nil, nil
+      ---@type lsp.Handler
+      ['actions/readFile'] = function(_, params)
+        if type(params) ~= 'table' or type(params.path) ~= 'string' then
+          return nil,
+            {
+              code = vim.lsp.protocol.ErrorCodes.InvalidParams,
+              message = 'actions/readFile requires a string path',
+            }
         end
-        local file_path = vim.uri_to_fname(result.path)
-        if vim.fn.filereadable(file_path) == 1 then
-          local f = assert(io.open(file_path, 'r'))
-          local text = f:read('*a')
-          f:close()
 
-          return text, nil
+        local ok, file_path = pcall(vim.uri_to_fname, params.path)
+        if not ok or not vim.startswith(params.path, 'file://') then
+          return nil,
+            {
+              code = vim.lsp.protocol.ErrorCodes.InvalidParams,
+              message = 'actions/readFile requires a file URI',
+            }
         end
-        return nil, nil
+
+        if vim.fn.filereadable(file_path) ~= 1 then
+          return vim.NIL
+        end
+
+        local f = io.open(file_path, 'rb')
+        if not f then
+          return vim.NIL
+        end
+
+        local text = f:read('*a')
+        f:close()
+        return text or vim.NIL
       end,
     },
   },

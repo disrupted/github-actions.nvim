@@ -35,11 +35,17 @@ Here's an example for `op` (1Password CLI):
 ```lua
 opts = {
   token_provider = function(callback)
-    require('github-actions.lsp.token_provider').system({
+    require('github-actions.system').run({
       'op',
       'read',
       'op://Work/GitHub/Access Token/xg7h2j4k9m1qv8z3r5w8n2p6s0',
-    }, callback)
+    }, { text = true }, function(out)
+      if out.code ~= 0 then
+        vim.notify(out.stderr or 'Token command failed', vim.log.levels.ERROR)
+        return
+      end
+      callback(out.stdout)
+    end)
   end,
 }
 ```
@@ -53,6 +59,15 @@ opts = {
   end,
 }
 ```
+
+### Repository discovery
+
+Before starting the LSP, the plugin asynchronously retrieves repository context using `gh repo view` from the workflow's Git repository root.
+
+The language server requires this context to resolve and validate local `uses: $/...` GitHub Actions references.
+
+for more info read [GitHub blog: Reference same-repository actions with self-repository syntax](https://github.blog/changelog/2026-07-30-reference-same-repository-actions-with-self-repository-syntax/)
+
 
 ## Notes
 
