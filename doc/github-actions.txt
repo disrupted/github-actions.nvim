@@ -122,7 +122,8 @@ self-repository syntax
 
 DEVELOPMENT                   *github-actions-github-actions.nvim-development*
 
-Dev dependencies are managed with mise <https://mise.jdx.dev>:
+Dev dependencies are managed with mise <https://mise.jdx.dev>. Tests run with
+ntf <https://github.com/notomo/ntf>, which is fetched on demand:
 
 >sh
     mise install
