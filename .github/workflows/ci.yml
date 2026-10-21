@@ -6,13 +6,20 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Stylua
-        uses: JohnnyMorganz/stylua-action@v3
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          version: latest
-          args: --check .
+          install_args: "hk stylua"
+      - run: hk check --all
+
+  test:
+    runs-on: ubuntu-latest
+    env:
+      MISE_ENV: ci
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+      - run: mise run test
 
   docs:
     runs-on: ubuntu-latest
@@ -23,7 +30,7 @@ jobs:
       contents: write
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: panvimdoc
         uses: kdheepak/panvimdoc@main
         with:
@@ -35,32 +42,3 @@ jobs:
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-
-  test:
-    name: Run Test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: rhysd/action-setup-vim@v1
-        id: vim
-        with:
-          neovim: true
-          version: nightly
-
-      - name: luajit
-        uses: leafo/gh-actions-lua@v10
-        with:
-          luaVersion: "luajit-openresty"
-
-      - name: luarocks
-        uses: leafo/gh-actions-luarocks@v4
-
-      - name: run test
-        shell: bash
-        run: |
-          luarocks install luacheck
-          luarocks install vusted
-          vusted ./test

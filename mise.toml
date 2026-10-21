@@ -1,0 +1,16 @@
+[tools]
+hk = "2.7.1"
+lua = "5.1"
+stylua = "2.6.0"
+
+[hooks]
+postinstall = "hk install --mise"
+
+[tasks.bootstrap]
+description = "Install the test dependencies"
+run = "luarocks install vusted"
+
+[tasks.test]
+description = "Run the test suite"
+depends = ["bootstrap"]
+run = "vusted ./test"

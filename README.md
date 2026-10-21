@@ -8,7 +8,31 @@ Neovim plugin for GitHub Actions.
 
 ## Installation
 
-example using [Lazy](https://github.com/folke/lazy.nvim) plugin manager
+The plugin lazy-loads itself. At startup it only registers the `yaml.github`
+filetype and a `FileType` autocommand. The language server is loaded the first
+time a workflow file is opened, so this works with `vim.pack` and any other
+plugin manager without lazy-loading support.
+
+```lua
+vim.pack.add({ 'https://github.com/disrupted/github-actions.nvim' })
+```
+
+Configuration is optional. Call `setup()` to override the defaults (see
+[Configuration](#configuration) below); it stays lazy and only stores the
+options until a workflow file is opened.
+
+```lua
+---@type github_actions.Opts
+local opts = {}
+require('github-actions').setup(opts)
+```
+
+### lazy.nvim
+
+With [lazy.nvim](https://github.com/folke/lazy.nvim) options can be passed
+through the usual `opts` mechanism. The `ft` trigger is optional since the
+plugin lazy-loads itself, but keeping it lets lazy defer loading the module
+entirely.
 
 ```lua
 {
@@ -68,6 +92,15 @@ The language server requires this context to resolve and validate local `uses: $
 
 for more info read [GitHub blog: Reference same-repository actions with self-repository syntax](https://github.blog/changelog/2026-07-30-reference-same-repository-actions-with-self-repository-syntax/)
 
+
+## Development
+
+Dev dependencies are managed with [mise](https://mise.jdx.dev):
+
+```sh
+mise install
+mise run test
+```
 
 ## Notes
 
