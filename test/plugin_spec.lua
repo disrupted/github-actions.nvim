@@ -1,16 +1,21 @@
+local ntf = require('ntf')
+local describe, it, before_each, after_each = ntf.describe, ntf.it, ntf.before_each, ntf.after_each
+local assert = ntf.assert
+
 describe('github-actions.nvim lazy loading', function()
   local starts
   local configured
-  local saved = {}
+  local saved
 
   before_each(function()
     starts = {}
     configured = nil
-    saved.config = package.loaded['github-actions.config']
-    saved.lsp = package.loaded['github-actions.lsp']
-    saved.entry = package.loaded['github-actions']
+    saved = {
+      config = package.loaded['github-actions.config'],
+      lsp = package.loaded['github-actions.lsp'],
+      entry = package.loaded['github-actions'],
+    }
 
-    -- Stub the heavy dependencies.
     package.loaded['github-actions.config'] = {
       config = { lsp = { marker = true } },
       setup = function(opts)
@@ -35,7 +40,7 @@ describe('github-actions.nvim lazy loading', function()
   it('does not start the LSP outside yaml.github', function()
     vim.bo.filetype = 'yaml'
     require('github-actions').setup({ marker = 'user' })
-    assert.same(0, #starts)
+    assert.equal(0, #starts)
   end)
 
   it('starts once on yaml.github and keeps the configured options', function()
@@ -44,18 +49,18 @@ describe('github-actions.nvim lazy loading', function()
 
     vim.bo.filetype = 'yaml.github'
     require('github-actions').setup()
-    assert.same(1, #starts)
-    assert.same('user', configured.marker)
-    assert.same(true, starts[1].lsp.marker)
+    assert.equal(1, #starts)
+    assert.equal('user', configured.marker)
+    assert.is_true(starts[1].lsp.marker)
 
     require('github-actions').setup({ marker = 'other' })
-    assert.same(1, #starts)
-    assert.same('user', configured.marker)
+    assert.equal(1, #starts)
+    assert.equal('user', configured.marker)
   end)
 
   it('registers the custom filetype', function()
     vim.cmd('runtime! ftdetect/github-actions.lua')
-    assert.same('yaml.github', vim.filetype.match({ filename = '/repo/.github/workflows/ci.yml' }))
+    assert.equal('yaml.github', vim.filetype.match({ filename = '/repo/.github/workflows/ci.yml' }))
   end)
 
   it('lazy-loads the plugin on FileType', function()
@@ -68,6 +73,6 @@ describe('github-actions.nvim lazy loading', function()
 
     vim.cmd('runtime! plugin/github-actions.lua')
     vim.api.nvim_exec_autocmds('FileType', { pattern = 'yaml.github' })
-    assert.same(1, calls)
+    assert.equal(1, calls)
   end)
 end)

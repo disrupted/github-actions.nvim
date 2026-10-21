@@ -1,16 +1,12 @@
 [tools]
 hk = "2.7.1"
-lua = "5.1"
 stylua = "2.6.0"
+# until ntf publishes releases install its pinned source archive directly.
+"http:ntf" = { version = "951c9db", url = "https://github.com/notomo/ntf/archive/951c9db2f59a7aa8cec7c64fbc04f7ad6a9a647f.tar.gz", bin = "bin/ntf" }
 
 [hooks]
 postinstall = "hk install --mise"
 
-[tasks.bootstrap]
-description = "Install the test dependencies"
-run = "luarocks install vusted"
-
 [tasks.test]
 description = "Run the test suite"
-depends = ["bootstrap"]
-run = "vusted ./test"
+run = "ntf ./test"

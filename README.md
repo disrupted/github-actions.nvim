@@ -95,7 +95,7 @@ for more info read [GitHub blog: Reference same-repository actions with self-rep
 
 ## Development
 
-Dev dependencies are managed with [mise](https://mise.jdx.dev):
+Dev dependencies are managed with [mise](https://mise.jdx.dev). Tests run with [ntf](https://github.com/notomo/ntf), which is fetched on demand:
 
 ```sh
 mise install

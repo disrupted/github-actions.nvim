@@ -1,3 +1,7 @@
+local ntf = require('ntf')
+local describe, it, before_each, after_each = ntf.describe, ntf.it, ntf.before_each, ntf.after_each
+local assert = ntf.assert
+
 describe('github-actions.lsp.token_provider', function()
   local system
   local provider
@@ -34,7 +38,7 @@ describe('github-actions.lsp.token_provider', function()
     assert.is_nil(token)
 
     completion({ code = 0, stdout = 'github_pat_example\n' })
-    assert.same('github_pat_example', provider.validate(token))
+    assert.equal('github_pat_example', provider.validate(token))
     assert.is_false(pcall(provider.validate, '  '))
   end)
 
@@ -51,6 +55,6 @@ describe('github-actions.lsp.token_provider', function()
     completion({ code = 1, stderr = 'not authenticated' })
 
     assert.is_nil(token)
-    assert.is_truthy(message:find('not authenticated', 1, true))
+    assert.truthy(message:find('not authenticated', 1, true))
   end)
 end)

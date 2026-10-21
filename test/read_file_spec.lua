@@ -1,3 +1,7 @@
+local ntf = require('ntf')
+local describe, it, before_each, after_each = ntf.describe, ntf.it, ntf.before_each, ntf.after_each
+local assert = ntf.assert
+
 describe('actions/readFile handler', function()
   local handler
   local path
@@ -19,25 +23,27 @@ describe('actions/readFile handler', function()
     local result, err = handler(nil, { path = uri })
     assert.is_true(result == vim.NIL)
     assert.is_nil(err)
-    assert.same('{"result":null}', vim.json.encode({ result = result }))
+    assert.equal('{"result":null}', vim.json.encode({ result = result }))
   end)
 
   it('returns the file contents', function()
-    local file = assert(io.open(path, 'wb'))
+    local file = io.open(path, 'wb')
+    assert.truthy(file)
     file:write('name: Test\n')
     file:close()
 
     local result, err = handler(nil, { path = uri })
-    assert.same('name: Test\n', result)
+    assert.equal('name: Test\n', result)
     assert.is_nil(err)
   end)
 
   it('returns an empty string for an empty file', function()
-    local file = assert(io.open(path, 'wb'))
+    local file = io.open(path, 'wb')
+    assert.truthy(file)
     file:close()
 
     local result, err = handler(nil, { path = uri })
-    assert.same('', result)
+    assert.equal('', result)
     assert.is_nil(err)
   end)
 
@@ -50,11 +56,11 @@ describe('actions/readFile handler', function()
     }) do
       local result, err = handler(nil, params)
       assert.is_nil(result)
-      assert.same(vim.lsp.protocol.ErrorCodes.InvalidParams, err.code)
+      assert.equal(vim.lsp.protocol.ErrorCodes.InvalidParams, err.code)
     end
 
     local result, err = handler(nil, nil)
     assert.is_nil(result)
-    assert.same(vim.lsp.protocol.ErrorCodes.InvalidParams, err.code)
+    assert.equal(vim.lsp.protocol.ErrorCodes.InvalidParams, err.code)
   end)
 end)
