@@ -1,5 +1,5 @@
 *github-actions.txt*
-                               For NVIM v0.8.0    Last change: 2026 October 19
+                               For NVIM v0.8.0    Last change: 2026 October 21
 
 ==============================================================================
 Table of Contents                           *github-actions-table-of-contents*
@@ -8,6 +8,7 @@ Table of Contents                           *github-actions-table-of-contents*
   - Features                     |github-actions-github-actions.nvim-features|
   - Installation             |github-actions-github-actions.nvim-installation|
   - Configuration           |github-actions-github-actions.nvim-configuration|
+  - Development               |github-actions-github-actions.nvim-development|
   - Notes                           |github-actions-github-actions.nvim-notes|
 
 ==============================================================================
@@ -23,7 +24,32 @@ FEATURES                         *github-actions-github-actions.nvim-features*
 
 INSTALLATION                 *github-actions-github-actions.nvim-installation*
 
-example using Lazy <https://github.com/folke/lazy.nvim> plugin manager
+The plugin lazy-loads itself. At startup it only registers the `yaml.github`
+filetype and a `FileType` autocommand. The language server is loaded the first
+time a workflow file is opened, so this works with `vim.pack` and any other
+plugin manager without lazy-loading support.
+
+>lua
+    vim.pack.add({ 'https://github.com/disrupted/github-actions.nvim' })
+<
+
+Configuration is optional. Call `setup()` to override the defaults (see
+|github-actions-github-actions.nvim-configuration| below); it stays lazy and
+only stores the options until a workflow file is opened.
+
+>lua
+    ---@type github_actions.Opts
+    local opts = {}
+    require('github-actions').setup(opts)
+<
+
+
+LAZY.NVIM ~
+
+With lazy.nvim <https://github.com/folke/lazy.nvim> options can be passed
+through the usual `opts` mechanism. The `ft` trigger is optional since the
+plugin lazy-loads itself, but keeping it lets lazy defer loading the module
+entirely.
 
 >lua
     {
@@ -92,6 +118,16 @@ $/...` GitHub Actions references.
 for more info read GitHub blog: Reference same-repository actions with
 self-repository syntax
 <https://github.blog/changelog/2026-07-30-reference-same-repository-actions-with-self-repository-syntax/>
+
+
+DEVELOPMENT                   *github-actions-github-actions.nvim-development*
+
+Dev dependencies are managed with mise <https://mise.jdx.dev>:
+
+>sh
+    mise install
+    mise run test
+<
 
 
 NOTES                               *github-actions-github-actions.nvim-notes*
