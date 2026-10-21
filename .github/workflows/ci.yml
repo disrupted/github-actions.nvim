@@ -2,6 +2,9 @@ name: CI
 
 on: [push]
 
+env:
+  MISE_NO_HOOKS: "1"
+
 jobs:
   lint:
     runs-on: ubuntu-latest
